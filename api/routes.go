@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/joelbraga/aztek/action"
 )
 
 func (api *ApiResource) GetAll(c *gin.Context, model interface{}) {
@@ -40,6 +41,9 @@ func (api *ApiResource) Update(c *gin.Context, model interface{}) {
 			if err != nil {
 				c.AbortWithStatus(404)
 			} else {
+				if api.ActionEvent != nil {
+					api.ActionEvent.AddEvent(action.UPDATE_MODEL, product)
+				}
 				c.JSON(200, api.HttpResponse("ok", "Updated", product))
 			}
 		}
@@ -51,6 +55,9 @@ func (api *ApiResource) Delete(c *gin.Context, model interface{}) {
 	if err := api.Repository.Delete(id, model); err != nil {
 		c.AbortWithStatus(404)
 	} else {
+		if api.ActionEvent != nil {
+			api.ActionEvent.AddEvent(action.DELETE_MODEL, id)
+		}
 		c.JSON(200, api.HttpResponse("ok", "Deleted", "Deleted"))
 	}
 }
