@@ -1,2 +1,2 @@
 # aztek
-GoLang Gorm-Gin CRUD
+Go Gorm CRUD
