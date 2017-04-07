@@ -1,4 +1,4 @@
-package repository
+package aztek
 
 import (
 	"github.com/jinzhu/gorm"
