@@ -90,6 +90,20 @@ func (rp *PostgresCoreRepo) GetWhere(model interface{}, preload []string) (inter
 	}
 }
 
+func (rp *PostgresCoreRepo) GetWhereMultiple(model interface{}, preload []string) (interface{}, error) {
+	sliceOfModel := reflect.SliceOf(reflect.TypeOf(model))
+	ptr := reflect.New(sliceOfModel)
+	ptr.Elem().Set(reflect.MakeSlice(sliceOfModel, 0, 0))
+	modelPtr := ptr.Interface()
+
+	db := setPreload(rp.DB, preload)
+	if err := db.Where(model).Find(modelPtr).Error; err != nil {
+		return modelPtr, err
+	} else {
+		return modelPtr, nil
+	}
+}
+
 func (rp *PostgresCoreRepo) Update(id string, model interface{}) error {
 	if err := rp.DB.Save(model).Error; err != nil {
 		return err
